@@ -8,6 +8,7 @@ from googleapiclient.http import MediaIoBaseDownload
 
 import pandas as pd
 import sqlite3
+import io
 
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -34,6 +35,7 @@ def extract_clients(date: datetime, service = connect_to_drive()):
         raise FileExistsError("Data folder not exists")
     
     filename = f"clients_{date.strftime('%Y-%m-%d')}.csv"
+
     print(filename)
     daily_clients_files = service.files().list(
     q=f"name='{filename}' and mimeType!='application/vnd.google-apps.folder'",
@@ -86,6 +88,7 @@ def extract_products(date: datetime, service = connect_to_drive()):
     fh.seek(0)
     data = pd.read_csv(fh, sep = ",")
     final_data = data[data.date == date.strftime("%Y-%m-%d")]
+    print(final_data.head())
     if final_data.shape[0]>0:
         final_data.to_csv(local_path, index=False)
 
@@ -105,5 +108,5 @@ def extract_orders(date: datetime, db_path: str = "ecommerce_orders_may2024.db",
 
 
 if __name__=="__main__":
-    
-    extract_orders(datetime.strptime("2024-05-03", "%Y-%m-%d"))
+    extract_products(datetime.strptime("2024-05-10", "%Y-%m-%d"))
+    #extract_orders(datetime.strptime("2024-05-03", "%Y-%m-%d"))
