@@ -12,7 +12,7 @@ import io
 
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
-SERVICE_ACCOUNT_FILE = "massive-glyph-323908-5809907c52ef.json"
+SERVICE_ACCOUNT_FILE = "drive_service_account.json"
 DATA_DIR = "data"
 RAW_DATA_DIR = os.path.join(DATA_DIR, "raw_data")
 
@@ -71,6 +71,7 @@ def extract_products(date: datetime, service = connect_to_drive()):
     ).execute().get('files', [])
     if not products_files:
         print(f"Aucun fichier trouvé avec le nom {filename}.")
+        return
     file_id = products_files[0]['id']
     print(f"Fichier trouvé : {products_files[0]['name']} (ID : {file_id})")
 
@@ -109,4 +110,5 @@ def extract_orders(date: datetime, db_path: str = "ecommerce_orders_may2024.db",
 
 if __name__=="__main__":
     extract_products(datetime.strptime("2024-05-10", "%Y-%m-%d"))
-    #extract_orders(datetime.strptime("2024-05-03", "%Y-%m-%d"))
+    extract_orders(datetime.strptime("2024-05-10", "%Y-%m-%d"))
+    extract_clients(datetime.strptime("2024-05-10", "%Y-%m-%d"))
